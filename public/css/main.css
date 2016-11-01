@@ -1,0 +1,85 @@
+body {
+	background-color: #eee;
+}
+
+header {
+	font-size:3em;
+	width:100%;
+	padding-left:18px;
+
+}
+
+section {
+	padding: 18px;
+	padding-bottom:0px;
+}
+
+.dayPanes {
+	width: 100%
+}
+
+h2 {
+font-size:2em;
+margin-top: 0px;
+}
+
+h1 {
+font-size:2em
+}
+
+
+.mui-tabs__bar li{
+	cursor:pointer;
+}
+
+
+.welcome-panel {
+background-color:#fea;
+}
+
+
+.app-left, .app-right {
+padding:0px;
+margin:0px;
+}
+
+.app-left {
+
+
+}
+
+
+th.dynatable-head a {
+	color:#000;
+}
+
+
+.dynatable-per-page {
+	display:none;
+}
+
+
+.app-overlay-div {
+
+	text-align:center;
+	vertical-align:middled;
+	font-size:2em;
+	padding:20px;
+	padding-top:75px;
+}
+
+.advanced-search-option{
+display:none;
+}
+
+#airlines-data tbody, #airports-data-to tbody, #airports-data-from tbody {
+cursor:pointer;
+}
+
+
+tbody tr:hover{
+	background-color: #DDD;
+}
+
+
+

@@ -1,0 +1,312 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- This section loads 3rd party CSS -->
+  <!-- load google fonts -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <!-- load icon font -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <link href="css/mui.min.css" rel="stylesheet" type="text/css" />
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <!-- link type="text/css" rel="stylesheet" href="css/datepicker.css" /-->
+  <link href="css/jquery.dynatable.css" rel="stylesheet" type="text/css" />
+
+  <!-- This secition loads Application main CSS-->
+  <link href="css/main.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<!-- This is the App bar / header -->
+<header class="mui-appbar mui--z1"> 
+  <i class="fa fa-globe"></i> Nathan's Flight Services
+</header>
+
+<!-- This div creates a grid based LHS column -->
+<div class="mui-col-md-3 app-left">
+<section class="">
+  <div class="mui-panel">
+    <h2><i class="fa fa-location-arrow" aria-hidden="true"></i> Where would you like to go?</h2>
+    <div class="mui-panel">
+  <form id="flight-search-form">
+    <div class="mui-textfield">
+      <input type="text" placeholder="e.g. Sydney" name="from" id="flight-from" onchange="searchAirportsFrom();">
+      <label>From</label>
+    </div>
+    <div class="mui-textfield">
+      <input type="text" placeholder="e.g. Heathrow" name="to" id="flight-to" onchange="searchAirportsTo();">
+      <label>To</label>
+    </div>
+    <div class="mui-textfield">
+      <input type="date" name="date" id="flight-date">
+      <label>Travel Date</label>
+    </div>
+    <div class="mui-select advanced-search-option"> 
+      <select id="airline-code">
+        <optgroup label="Search across all airlines">
+    <option value="ALL">All</option>
+        </optgroup>
+        <optgroup id="airline-codes-data" label="Fly with a specific airline">
+        </optgroup>
+      </select>
+      <label>Airline</label>
+    </div>
+    <button type="button" class="mui-btn mui-btn--primary mui-btn--raised" onclick="searchFlights()">Find Flights</button>
+    <button type="button" class="mui-btn mui-btn--raised" onclick="resetFlightSearchForm();">Reset</button>
+    <button type="button" class="mui-btn mui-btn--raised" onclick="$('.advanced-search-option').fadeIn();">Advanced</button>
+  </form>
+    </div>
+  </div>
+</section>
+
+
+<!-- This section displays a list of the available airlines -->
+<section class="airlines">
+  <div class="mui-panel">
+  <h2><i class="fa fa-plane" aria-hidden="true"></i> Airlines</h2>
+<p>Click the airline you want to use (optional)</p>
+<table id="airlines-data">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+  <br />
+  <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="searchForAirlines();">Refresh</button>
+  </div>
+</section>
+
+
+
+<!-- Links -->
+<section class="">
+  <div class="mui-panel">
+  <h2>Links</h2>
+<a class="mui-btn mui-btn--secondary mui-btn--raised" href="http://node.locomote.com/code-task/" target="_blank">Instructions</a>
+  </div>
+</section>
+
+</div> <!-- end of LHS column -->
+
+
+<!-- This div creates a grid based RHS column -->
+<div class="mui-col-md-9 app-right">
+
+
+<!-- This simple section shows a welcome message -->
+<section class="welcome-message">
+  <div class="mui-panel welcome-panel">
+  <h2><i class="fa fa-comment" aria-hidden="true"></i> Welcome!</h2> 
+  
+  <p>To begin, fill in the search form to the left.</p>
+  <br />
+  <button class="mui-btn mui-btn--primary mui-btn--raised" onclick="$('.welcome-message').fadeOut()">CLOSE</button>
+  </div>
+</section>
+
+
+<!-- Loading indicator so the user knows a request is happeneing -->
+<section class="loading-message" style="display:none">
+  <div class="mui-panel">
+  <img src="img/magnify.gif" />  <span></span>
+  </div>
+</section>
+
+
+
+<!-- This section shows the search results in 5 tabs - Today + surrounding days +/- 2 -->
+<section class="flight-search-results" style="display:none">
+  <div class="mui-panel">
+
+     <h2><i class="fa fa-plane" aria-hidden="true"></i> Flight Search Results</h2>
+     <br />
+
+     <div class="mui-panel">
+    <ul class="mui-tabs__bar mui-tabs__bar--justified">
+      <li><a data-mui-toggle="tab" data-mui-controls="tab-day-0">0</a></li>
+      <li><a data-mui-toggle="tab" data-mui-controls="tab-day-1">1</a></li>
+      <li class="mui--is-active"><a data-mui-toggle="tab" data-mui-controls="tab-day-2">2</a></li>
+      <li><a data-mui-toggle="tab" data-mui-controls="tab-day-3">3</a></li>
+      <li><a data-mui-toggle="tab" data-mui-controls="tab-day-4">4</a></li>
+    </ul>
+
+    <div class="mui-tabs__pane" id="tab-day-0"><table>
+      <thead>
+        <tr>
+    <th>Airline Name</th>
+    <th>Duration Min</th>
+    <th>Price</th>
+    <th>Flight Num</th>
+    <th>Departs</th>
+    <th>Arrives</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table></div>
+    <div class="mui-tabs__pane" id="tab-day-1"><table>
+      <thead>
+        <tr>
+    <th>Airline Name</th>
+    <th>Duration Min</th>
+    <th>Price</th>
+    <th>Flight Num</th>
+    <th>Departs</th>
+    <th>Arrives</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table></div>
+    <div class="mui-tabs__pane mui--is-active" id="tab-day-2"><table>
+      <thead>
+        <tr>
+    <th>Airline Name</th>
+    <th>Duration Min</th>
+    <th>Price</th>
+    <th>Flight Num</th>
+    <th>Departs</th>
+    <th>Arrives</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table></div>
+    <div class="mui-tabs__pane" id="tab-day-3"><table>
+      <thead>
+        <tr>
+    <th>Airline Name</th>
+    <th>Duration Min</th>
+    <th>Price</th>
+    <th>Flight Num</th>
+    <th>Departs</th>
+    <th>Arrives</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table></div>
+    <div class="mui-tabs__pane" id="tab-day-4"><table>
+      <thead>
+        <tr>
+    <th>Airline Name</th>
+    <th>Duration Min</th>
+    <th>Price</th>
+    <th>Flight Num</th>
+    <th>Departs</th>
+    <th>Arrives</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table></div>
+
+     </div>
+     <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="searchFlights();">Refresh</button>
+     <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="cancelSearchResults();">Close</button>
+  </div>
+</section>
+
+
+
+<!-- departures search results for airports (not a requirement, just added for fun) -->
+<section class="airports-from" style="display:none">
+  <div class="mui-panel">
+  <h2><i class="fa fa-plane" aria-hidden="true"></i> Airports at Departure</h2>
+  <table id="airports-data-from">
+    <p>Click the airport of your departure</p>
+     <thead>
+        <tr>
+    <th>Airport Code</th>
+    <th>Airport Name</th>
+    <th>City Name</th>
+    <th>State Code</th>
+    <th>Country Name</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table>
+  <br />
+  <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="searchAirportsFrom();">Refresh</button>
+     <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="$('.airports-from').fadeOut();">Close</button>
+  </div>
+</section>
+
+
+<!-- arrivals search results for airports (not a requirement, just added for fun) -->
+<section class="airports-to" style="display:none">
+  <div class="mui-panel">
+  <h2><i class="fa fa-plane" aria-hidden="true"></i> Airports at Destination</h2>
+  <p>Click the airport of your destination</p>
+  <table id="airports-data-to"> 
+     <thead>
+        <tr>
+    <th>Airport Code</th>
+    <th>Airport Name</th>
+    <th>City Name</th>
+    <th>State Code</th>
+    <th>Country Name</th>
+        </tr>
+     </thead>
+     <tbody>
+       </tbody>
+  </table>
+  <br />
+  <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="searchAirportsTo();">Refresh</button>
+     <button class="mui-btn mui-btn--secondary mui-btn--raised" onclick="$('.airports-to').fadeOut();">Close</button>
+  </div>
+</section>
+
+
+</div>
+
+<!-- TODO: implement UI framework (angular, react? ) -->
+
+
+<!-- This part loads all of the application front end code and libraries -->
+
+<!-- load jQuery -->
+<!-- FIXME: dynatable library acts a bit strange with modern jquery version. (seems to work well with 1.7.2) -->
+<!--script src="js/jquery-3.1.1.min.js"></script-->
+<script src="js/jquery-1.7.2.min.js"></script>
+
+<!-- load MUI -->
+<script src="js/mui.min.js"></script>
+
+<!-- load materialize -->
+<!-- FIXME: should proboably only use either materialize or mui, but not both but it's fine for now-->
+<script type="text/javascript" src="js/materialize.min.js"></script>
+
+<!--script type="text/javascript" src="js/datepicker.js"></script-->
+<!--script type="text/javascript" src="js/datepicker.standalone.js"></script-->
+
+<!--load table library-->
+<script type="text/javascript" src="js/jquery.dynatable.js"></script>
+
+<!-- load Ramda -->
+<script src="js/ramda.min.js"></script>
+
+<!-- load bluebird -->
+<script src="js/bluebird.min.js"></script>
+<!-- load moment -->
+<script src="js/moment.js"></script>
+
+<!-- load Application -->
+<script src="js/main.js"></script>  
+
+
+</body>
+</html>
