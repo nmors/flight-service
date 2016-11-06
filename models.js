@@ -17,7 +17,7 @@ const buildQueryParameters = params => {
 
 // Creates a model based on a HTTP service as it's data source 
 const createServiceModel = m => {
-	return {
+  return {
     search(params, urlSuffix) {
       return new P(resolve => {
         const myRequestEndpoint = m.baseURL + m.endpoint + (urlSuffix ? '/' + urlSuffix : '')
@@ -37,7 +37,7 @@ const createServiceModel = m => {
     delete(id) {}, 
     update(id, data) {}, 
     insert(data) {}  
-	}
+  }
 }
 
 
