@@ -12,7 +12,7 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "express": "^4.14.0",
-    "ramda": "^0.22.1",
+    "ramda": "^0.27.2",
     "request": "^2.76.0"
   }
 }
